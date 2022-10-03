@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/add_task_page.dart';
 
+import 'detail_page.dart';
 import 'task.dart';
 
 void main() {
@@ -61,8 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
             sampleTasks.insert(newIndex, moveTask);
           },
           itemBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 50,
+            return Container(
               key: Key(sampleTasks[index].taskId),
               child: TodoList(task: sampleTasks[index]),
             );
@@ -71,7 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const AddTaskPage(),
+            ),
+          )
+        },
         tooltip: 'Add task',
         child: const Icon(Icons.add_task),
       ),
@@ -103,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
 /// ToDoリストに表示する1件のListTile(1件のタスク)を生成します。
 ///
 /// フィールドのタスクを元に生成したListTile Widget を返します。
-class TodoList extends StatelessWidget {
+class TodoList extends StatefulWidget {
   /// ListTile に表示する1件のタスク
   final Task task;
 
@@ -111,12 +118,23 @@ class TodoList extends StatelessWidget {
   const TodoList({super.key, required this.task});
 
   @override
+  State<TodoList> createState() => _TodoList();
+}
+
+class _TodoList extends State<TodoList> {
+  @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       child: ListTile(
-        // key: ValueKey(task.taskId),
-        title: Text(task.title),
+        title: Text(widget.task.title),
         trailing: const Icon(Icons.sort),
+        onTap: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => DetailPage(task: widget.task),
+            ),
+          ),
+        },
       ),
     );
   }

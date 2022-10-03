@@ -50,16 +50,24 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ListView.separated(
+        child: ReorderableListView.builder(
           padding: const EdgeInsets.all(8),
           itemCount: sampleTasks.length,
+          onReorder: (int oldIndex, int newIndex) {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            Task moveTask = sampleTasks.removeAt(oldIndex);
+            sampleTasks.insert(newIndex, moveTask);
+          },
           itemBuilder: (BuildContext context, int index) {
             return SizedBox(
               height: 50,
+              key: Key(sampleTasks[index].taskId),
               child: TodoList(task: sampleTasks[index]),
             );
           },
-          separatorBuilder: (BuildContext context, int index) => const Divider(),
+          // separatorBuilder: (BuildContext context, int index) => const Divider(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -73,9 +81,21 @@ class _MyHomePageState extends State<MyHomePage> {
   /// サンプル用のタスクを生成します。
   static List<Task> generateSampleTasks() {
     return [
-      Task("診察", done, "○○整形外科で10時"),
-      Task("買い出し", done, "スーパー△△で調味料の買い出し"),
-      Task("晩御飯の準備", yet, "エビフライ"),
+      Task("0", "診察", done, "○○整形外科で10時"),
+      Task("1", "買い出し", done, "スーパー△△で調味料の買い出し"),
+      Task("2", "晩御飯の準備", yet, "エビフライ"),
+      Task("3", "診察", done, "○○整形外科で10時"),
+      Task("4", "買い出し", done, "スーパー△△で調味料の買い出し"),
+      Task("5", "晩御飯の準備", yet, "エビフライ"),
+      Task("6", "診察", done, "○○整形外科で10時"),
+      Task("7", "買い出し", done, "スーパー△△で調味料の買い出し"),
+      Task("8", "晩御飯の準備", yet, "エビフライ"),
+      Task("9", "診察", done, "○○整形外科で10時"),
+      Task("10", "買い出し", done, "スーパー△△で調味料の買い出し"),
+      Task("11", "晩御飯の準備", yet, "エビフライ"),
+      Task("12", "診察", done, "○○整形外科で10時"),
+      Task("13", "買い出し", done, "スーパー△△で調味料の買い出し"),
+      Task("14", "晩御飯の準備", yet, "エビフライ"),
     ];
   }
 }
@@ -92,8 +112,12 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(task.title),
+    return Card(
+      child: ListTile(
+        // key: ValueKey(task.taskId),
+        title: Text(task.title),
+        trailing: const Icon(Icons.sort),
+      ),
     );
   }
 }

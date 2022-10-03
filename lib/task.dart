@@ -2,6 +2,8 @@
 ///
 /// 登録された1件のタスクを保持します。
 class Task {
+  /// 並び順保持用のID
+  final String taskId;
   /// タスクのタイトル
   final String title;
 
@@ -12,5 +14,5 @@ class Task {
   final String detail;
 
   /// コンストラクタ
-  Task(this.title, this.status, this.detail);
+  Task(this.taskId, this.title, this.status, this.detail);
 }

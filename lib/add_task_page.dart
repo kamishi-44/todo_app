@@ -9,8 +9,22 @@ class AddTaskPage extends StatefulWidget {
 
 enum RadioValue { yet, doing, done }
 
+extension RadioValueExtension on RadioValue {
+  static final values = {
+    RadioValue.yet: '未着手',
+    RadioValue.doing: '着手中',
+    RadioValue.done: '完了',
+  };
+
+  String get statusValue => values[this]!;
+}
+
 class _AddTaskPage extends State<AddTaskPage> {
   RadioValue _selectedButton = RadioValue.yet;
+
+  void _onRadioSelected(RadioValue? selectedButton) => setState(() {
+        _selectedButton = selectedButton!;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -23,33 +37,23 @@ class _AddTaskPage extends State<AddTaskPage> {
         child: Column(
           children: <Widget>[
             const TextField(
-              // maxLines: 1,
               autofocus: true,
               decoration: InputDecoration(
                 labelText: 'タイトルを入力',
               ),
             ),
-            Row(
-              children: <Widget>[
-                Radio(
-                  value: RadioValue.yet,
-                  groupValue: _selectedButton,
-                  onChanged: (selectedButton) => _onRadioSelected,
-                ),
-                const Text('未着手'),
-                Radio(
-                  value: RadioValue.doing,
-                  groupValue: _selectedButton,
-                  onChanged: (selectedButton) => _onRadioSelected,
-                ),
-                const Text('着手中'),
-                Radio(
-                  value: RadioValue.done,
-                  groupValue: _selectedButton,
-                  onChanged: (selectedButton) => _onRadioSelected,
-                ),
-                const Text('完了'),
-              ],
+            const SizedBox(
+              height: 30,
+            ),
+            generateStatusRadio(),
+            const SizedBox(
+              height: 30,
+            ),
+            const TextField(
+              maxLines: 5,
+              decoration: InputDecoration(
+                labelText: 'タスクの詳細',
+              ),
             ),
           ],
         ),
@@ -57,7 +61,40 @@ class _AddTaskPage extends State<AddTaskPage> {
     );
   }
 
-  void _onRadioSelected(RadioValue selectedButton) => setState(() {
-        _selectedButton = selectedButton;
-      });
+  Widget generateStatusRadio() {
+    return Row(
+      children: <Widget>[
+        Row(
+          children: [
+            Radio<RadioValue>(
+              value: RadioValue.yet,
+              groupValue: _selectedButton,
+              onChanged: (selectedButton) => _onRadioSelected(selectedButton),
+            ),
+            Text(RadioValue.yet.statusValue),
+          ],
+        ),
+        Row(
+          children: [
+            Radio<RadioValue>(
+              value: RadioValue.doing,
+              groupValue: _selectedButton,
+              onChanged: (selectedButton) => _onRadioSelected(selectedButton),
+            ),
+            Text(RadioValue.doing.statusValue),
+          ],
+        ),
+        Row(
+          children: [
+            Radio<RadioValue>(
+              value: RadioValue.done,
+              groupValue: _selectedButton,
+              onChanged: (selectedButton) => _onRadioSelected(selectedButton),
+            ),
+            Text(RadioValue.done.statusValue),
+          ],
+        ),
+      ],
+    );
+  }
 }

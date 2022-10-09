@@ -20,13 +20,11 @@ class _DetailPage extends State<DetailPage> {
         title: const Text("タスク詳細"),
       ),
       body: Center(
-        child: Container(
-          child: Column(
-            children: <Widget> [
-              const Text("詳細ページだよーー。"),
-              Text(widget.task.title),
-            ],
-          ),
+        child: Column(
+          children: <Widget> [
+            const Text("詳細ページだよーー。"),
+            Text(widget.task.title),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(

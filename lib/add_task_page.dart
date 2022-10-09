@@ -29,35 +29,67 @@ class _AddTaskPage extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // キーボード表示時に自動でサイズを調整されないようにする設定
+      // resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("タスク登録"),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: <Widget>[
-            const TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'タイトルを入力',
-              ),
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const TextField(
+                  decoration: InputDecoration(
+                    labelText: 'タイトルを入力',
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                generateStatusRadio(),
+                const SizedBox(
+                  height: 30,
+                ),
+                const TextField(
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    labelText: 'タスクの詳細',
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: ElevatedButton(
+                    child: const Text('登録'),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              title: const Text('データを登録してもいいですか？'),
+                              actions: <Widget>[
+                                GestureDetector(
+                                  child: const Text('いいえ'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                GestureDetector(
+                                  child: const Text('はい'),
+                                  onTap: () {},
+                                )
+                              ],
+                            );
+                          });
+                    },
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
-            generateStatusRadio(),
-            const SizedBox(
-              height: 30,
-            ),
-            const TextField(
-              maxLines: 5,
-              decoration: InputDecoration(
-                labelText: 'タスクの詳細',
-              ),
-            ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 

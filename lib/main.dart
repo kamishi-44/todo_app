@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/add_task_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'detail_page.dart';
 import 'task.dart';
@@ -19,6 +20,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale("ja", "JP"),
+      ],
       home: const MyHomePage(title: 'Todo リスト'),
     );
   }
@@ -124,18 +133,16 @@ class TodoList extends StatefulWidget {
 class _TodoList extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListTile(
-        title: Text(widget.task.title),
-        trailing: const Icon(Icons.sort),
-        onTap: () => {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) => DetailPage(task: widget.task),
-            ),
+    return ListTile(
+      title: Text(widget.task.title),
+      trailing: const Icon(Icons.sort),
+      onTap: () => {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) => DetailPage(task: widget.task),
           ),
-        },
-      ),
+        ),
+      },
     );
   }
 }

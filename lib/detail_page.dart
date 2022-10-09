@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'add_task_page.dart';
 import 'task.dart';
 
 class DetailPage extends StatefulWidget {
@@ -29,7 +30,13 @@ class _DetailPage extends State<DetailPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const AddTaskPage(),
+            ),
+          )
+        },
         tooltip: 'Add task',
         child: const Icon(Icons.add_task),
       ),

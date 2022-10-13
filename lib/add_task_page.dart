@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -65,6 +66,16 @@ class _AddTaskPage extends State<AddTaskPage> {
                   child: ElevatedButton(
                     child: const Text('登録'),
                     onPressed: () {
+                      // Firebase にアクセスしてデータを登録する。
+                      var db = FirebaseFirestore.instance;
+                      var task = <String, dynamic> {
+                        "title": "画面のタイトル",
+                        "status": _selectedButton,
+                        "detail": "画面の詳細",
+                        "insert_at": "",
+                        "update_at": "",
+                      };
+                      db.collection("users").add(task);
                       showDialog(
                           context: context,
                           builder: (_) {

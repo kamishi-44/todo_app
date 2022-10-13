@@ -1,11 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/add_task_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'detail_page.dart';
+import 'firebase_options.dart';
 import 'task.dart';
 
-void main() {
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 

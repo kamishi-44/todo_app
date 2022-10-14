@@ -72,29 +72,12 @@ class _AddTaskPage extends State<AddTaskPage> {
                         "title": "画面のタイトル",
                         "status": _selectedButton,
                         "detail": "画面の詳細",
-                        "insert_at": "",
+                        "insert_at": DateTime.now(),
                         "update_at": "",
                       };
-                      db.collection("users").add(task);
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                              title: const Text('データを登録してもいいですか？'),
-                              actions: <Widget>[
-                                GestureDetector(
-                                  child: const Text('いいえ'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                GestureDetector(
-                                  child: const Text('はい'),
-                                  onTap: () {},
-                                )
-                              ],
-                            );
-                          });
+                      db.collection("users").doc("userid").set({"userid": "admin"});
+                      db.collection("users").doc("admin").collection("task").add(task);
+
                     },
                   ),
                 ),

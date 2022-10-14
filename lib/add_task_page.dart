@@ -17,11 +17,20 @@ extension RadioValueExtension on RadioValue {
     RadioValue.done: '完了',
   };
 
+  static final intValues = {
+    RadioValue.yet: 0,
+    RadioValue.doing: 1,
+    RadioValue.done: 2,
+  };
+
   String get statusValue => values[this]!;
+  int get statusInt => intValues[this]!;
 }
 
 class _AddTaskPage extends State<AddTaskPage> {
   RadioValue _selectedButton = RadioValue.yet;
+  final _titleController = TextEditingController();
+  final _detailController = TextEditingController();
 
   void _onRadioSelected(RadioValue? selectedButton) => setState(() {
         _selectedButton = selectedButton!;
@@ -40,8 +49,9 @@ class _AddTaskPage extends State<AddTaskPage> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
                     labelText: 'タイトルを入力',
                   ),
                 ),
@@ -52,9 +62,10 @@ class _AddTaskPage extends State<AddTaskPage> {
                 const SizedBox(
                   height: 30,
                 ),
-                const TextField(
+                TextField(
+                  controller: _detailController,
                   maxLines: 5,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'タスクの詳細',
                   ),
                 ),
@@ -69,13 +80,11 @@ class _AddTaskPage extends State<AddTaskPage> {
                       // Firebase にアクセスしてデータを登録する。
                       var db = FirebaseFirestore.instance;
                       var task = <String, dynamic> {
-                        "title": "画面のタイトル",
-                        "status": _selectedButton,
-                        "detail": "画面の詳細",
+                        "title": _titleController.text,
+                        "status": _selectedButton.statusInt,
+                        "detail": _detailController.text,
                         "insert_at": DateTime.now(),
-                        "update_at": "",
                       };
-                      db.collection("users").doc("userid").set({"userid": "admin"});
                       db.collection("users").doc("admin").collection("task").add(task);
 
                     },

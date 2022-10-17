@@ -2,16 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/add_task_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:todo_app/data/task_list.dart';
 
 import 'detail_page.dart';
 import 'firebase_options.dart';
-import 'task.dart';
+import 'model/task.dart';
 
 Future<void> main() async {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -57,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// タスクの完了を表すステータス
   static const int done = 2;
 
-  static List<Task> sampleTasks = generateSampleTasks();
+  static final TaskList _taskList = TaskList("admin");
 
   @override
   Widget build(BuildContext context) {
@@ -68,21 +70,21 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: ReorderableListView.builder(
           padding: const EdgeInsets.all(8),
-          itemCount: sampleTasks.length,
+          itemCount: _taskList.list.length,
           onReorder: (int oldIndex, int newIndex) {
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            Task moveTask = sampleTasks.removeAt(oldIndex);
-            sampleTasks.insert(newIndex, moveTask);
+
+            Task moveTask = _taskList.list.removeAt(oldIndex);
+            _taskList.list.insert(newIndex, moveTask);
           },
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              key: Key(sampleTasks[index].taskId),
-              child: TodoList(task: sampleTasks[index]),
+              key: Key(_taskList.list[index].taskId.toString()),
+              child: TodoList(task: _taskList.list[index]),
             );
           },
-          // separatorBuilder: (BuildContext context, int index) => const Divider(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -97,27 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add_task),
       ),
     );
-  }
-
-  /// サンプル用のタスクを生成します。
-  static List<Task> generateSampleTasks() {
-    return [
-      Task("0", "診察", done, "○○整形外科で10時"),
-      Task("1", "買い出し", done, "スーパー△△で調味料の買い出し"),
-      Task("2", "晩御飯の準備", yet, "エビフライ"),
-      Task("3", "診察", done, "○○整形外科で10時"),
-      Task("4", "買い出し", done, "スーパー△△で調味料の買い出し"),
-      Task("5", "晩御飯の準備", yet, "エビフライ"),
-      Task("6", "診察", done, "○○整形外科で10時"),
-      Task("7", "買い出し", done, "スーパー△△で調味料の買い出し"),
-      Task("8", "晩御飯の準備", yet, "エビフライ"),
-      Task("9", "診察", done, "○○整形外科で10時"),
-      Task("10", "買い出し", done, "スーパー△△で調味料の買い出し"),
-      Task("11", "晩御飯の準備", yet, "エビフライ"),
-      Task("12", "診察", done, "○○整形外科で10時"),
-      Task("13", "買い出し", done, "スーパー△△で調味料の買い出し"),
-      Task("14", "晩御飯の準備", yet, "エビフライ"),
-    ];
   }
 }
 

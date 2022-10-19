@@ -17,7 +17,7 @@ class Task {
   late final String detail;
 
   /// コンストラクタ
-  Task(this.taskId, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+  Task(this.taskId, DocumentSnapshot  doc) {
     title = doc["title"];
     status = doc["status"];
     detail = doc["detail"];

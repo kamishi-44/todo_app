@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'add_task_page.dart';
-import 'task.dart';
+import 'model/task.dart';
 
 class DetailPage extends StatefulWidget {
   final Task task;

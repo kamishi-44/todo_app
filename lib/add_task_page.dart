@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/data/data_manager.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -16,11 +17,21 @@ extension RadioValueExtension on RadioValue {
     RadioValue.done: '完了',
   };
 
+  static final intValues = {
+    RadioValue.yet: 0,
+    RadioValue.doing: 1,
+    RadioValue.done: 2,
+  };
+
   String get statusValue => values[this]!;
+
+  int get statusInt => intValues[this]!;
 }
 
 class _AddTaskPage extends State<AddTaskPage> {
   RadioValue _selectedButton = RadioValue.yet;
+  final _titleController = TextEditingController();
+  final _detailController = TextEditingController();
 
   void _onRadioSelected(RadioValue? selectedButton) => setState(() {
         _selectedButton = selectedButton!;
@@ -39,8 +50,9 @@ class _AddTaskPage extends State<AddTaskPage> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
                     labelText: 'タイトルを入力',
                   ),
                 ),
@@ -51,9 +63,10 @@ class _AddTaskPage extends State<AddTaskPage> {
                 const SizedBox(
                   height: 30,
                 ),
-                const TextField(
+                TextField(
+                  controller: _detailController,
                   maxLines: 5,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'タスクの詳細',
                   ),
                 ),
@@ -65,25 +78,14 @@ class _AddTaskPage extends State<AddTaskPage> {
                   child: ElevatedButton(
                     child: const Text('登録'),
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                              title: const Text('データを登録してもいいですか？'),
-                              actions: <Widget>[
-                                GestureDetector(
-                                  child: const Text('いいえ'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                GestureDetector(
-                                  child: const Text('はい'),
-                                  onTap: () {},
-                                )
-                              ],
-                            );
-                          });
+                      // Firebase にアクセスしてデータを登録する。
+                      var task = <String, dynamic>{
+                        "title": _titleController.text,
+                        "status": _selectedButton.statusInt,
+                        "detail": _detailController.text,
+                        "insert_at": DateTime.now(),
+                      };
+                      DataManager.addTask("admin", task);
                     },
                   ),
                 ),

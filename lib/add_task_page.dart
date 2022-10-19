@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/data/data_manager.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -24,6 +24,7 @@ extension RadioValueExtension on RadioValue {
   };
 
   String get statusValue => values[this]!;
+
   int get statusInt => intValues[this]!;
 }
 
@@ -78,15 +79,13 @@ class _AddTaskPage extends State<AddTaskPage> {
                     child: const Text('登録'),
                     onPressed: () {
                       // Firebase にアクセスしてデータを登録する。
-                      var db = FirebaseFirestore.instance;
-                      var task = <String, dynamic> {
+                      var task = <String, dynamic>{
                         "title": _titleController.text,
                         "status": _selectedButton.statusInt,
                         "detail": _detailController.text,
                         "insert_at": DateTime.now(),
                       };
-                      db.collection("users").doc("admin").collection("task").add(task);
-
+                      DataManager.addTask("admin", task);
                     },
                   ),
                 ),

@@ -1,13 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/add_task_page.dart';
 import 'package:todo_app/model/main_model.dart';
 
 import 'detail_page.dart';
 import 'firebase_options.dart';
-import 'model/task.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,8 +55,6 @@ class MyHomePage extends StatelessWidget {
 
   final String title;
 
-  static final _taskList = <Task>[];
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MainModel>(
@@ -69,19 +67,36 @@ class MyHomePage extends StatelessWidget {
           builder: (context, model, child) {
             final tasks = model.tasks;
             return ListView.builder(
-                itemCount: tasks.length, itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(tasks[index].title),
-                    trailing: const Icon(Icons.sort),
-                    onTap: () => {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => DetailPage(task: tasks[index]),
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  return Slidable(
+                    key: ValueKey(index),
+                    endActionPane: const ActionPane(
+                      motion: ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: null,
+                          flex: 2,
+                          backgroundColor: Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: '削除',
                         ),
-                      ),
-                    },
+                      ],
+                    ),
+                    child: ListTile(
+                      title: Text(tasks[index].title),
+                      onTap: () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                DetailPage(task: tasks[index]),
+                          ),
+                        ),
+                      },
+                    ),
                   );
-            });
+                });
           },
         ),
         floatingActionButton: FloatingActionButton(

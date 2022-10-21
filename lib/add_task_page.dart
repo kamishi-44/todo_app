@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/data/data_manager.dart';
 
+import 'main.dart';
+
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
 
@@ -86,6 +88,14 @@ class _AddTaskPage extends State<AddTaskPage> {
                         "insert_at": DateTime.now(),
                       };
                       DataManager.addTask("admin", task);
+
+                      // Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const MyHomePage(title: 'Todo リスト'),
+                        ),
+                      );
                     },
                   ),
                 ),

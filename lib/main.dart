@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/add_task_page.dart';
+import 'package:todo_app/data/data_manager.dart';
 import 'package:todo_app/model/main_model.dart';
 
 import 'detail_page.dart';
@@ -71,13 +72,15 @@ class MyHomePage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Slidable(
                     key: ValueKey(index),
-                    endActionPane: const ActionPane(
-                      motion: ScrollMotion(),
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
                       children: [
                         SlidableAction(
-                          onPressed: null,
+                          onPressed: (context) {
+                            DataManager.deleteTask('admin', tasks[index].docId);
+                          },
                           flex: 2,
-                          backgroundColor: Color(0xFFFE4A49),
+                          backgroundColor: const Color(0xFFFE4A49),
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
                           label: '削除',

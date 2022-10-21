@@ -16,10 +16,14 @@ class Task {
   /// タスクの詳細
   late final String detail;
 
+  /// FirestoreのドキュメントID
+  late final String docId;
+
   /// コンストラクタ
   Task(this.taskId, DocumentSnapshot  doc) {
     title = doc["title"];
     status = doc["status"];
     detail = doc["detail"];
+    docId = doc.id;
   }
 }

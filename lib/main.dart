@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/add_task_page.dart';
 import 'package:todo_app/data/data_manager.dart';
 import 'package:todo_app/model/main_model.dart';
+import 'package:todo_app/util/view_util.dart';
 
 import 'detail_page.dart';
 import 'firebase_options.dart';
@@ -67,49 +68,47 @@ class MyHomePage extends StatelessWidget {
         body: Consumer<MainModel>(
           builder: (context, model, child) {
             final tasks = model.tasks;
-            return ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return Slidable(
-                    key: ValueKey(index),
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) {
-                            DataManager.deleteTask('admin', tasks[index].docId);
-                          },
-                          flex: 2,
-                          backgroundColor: const Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: '削除',
-                        ),
-                      ],
-                    ),
-                    child: ListTile(
-                      title: Text(tasks[index].title),
-                      onTap: () => {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                DetailPage(task: tasks[index]),
+            return SlidableAutoCloseBehavior(
+              closeWhenTapped: true,
+              child: ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    return Slidable(
+                      key: ValueKey(index),
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              DataManager.deleteTask(
+                                  'admin', tasks[index].docId);
+                            },
+                            flex: 2,
+                            backgroundColor: const Color(0xFFFE4A49),
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: '削除',
                           ),
-                        ),
-                      },
-                    ),
-                  );
-                });
+                        ],
+                      ),
+                      child: ListTile(
+                        title: Text(tasks[index].title),
+                        onTap: () => {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  DetailPage(task: tasks[index]),
+                            ),
+                          ),
+                        },
+                      ),
+                    );
+                  }),
+            );
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => const AddTaskPage(),
-              ),
-            )
-          },
+          onPressed: () => ViewUtil.transitionAddTaskPage(context),
           tooltip: 'Add task',
           child: const Icon(Icons.add_task),
         ),

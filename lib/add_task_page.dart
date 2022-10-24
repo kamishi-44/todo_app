@@ -28,6 +28,13 @@ extension RadioValueExtension on RadioValue {
   String get statusValue => values[this]!;
 
   int get statusInt => intValues[this]!;
+
+  static RadioValue intToRadioValue(int statusInt) {
+    for (RadioValue radio in RadioValue.values) {
+      if(radio.statusInt == statusInt) return radio;
+    }
+    return RadioValue.yet;
+  }
 }
 
 class _AddTaskPage extends State<AddTaskPage> {

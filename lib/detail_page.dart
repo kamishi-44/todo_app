@@ -20,6 +20,9 @@ class _DetailPage extends State<DetailPage> {
   late RadioValue _selectedButton;
   late final TextEditingController _titleController;
   late final TextEditingController _detailController;
+  late bool _textFieldEnabled;
+  late bool _textFieldReadOnly;
+  late bool _buttonEnabled;
 
   @override
   initState() {
@@ -27,17 +30,32 @@ class _DetailPage extends State<DetailPage> {
     _selectedButton = RadioValueExtension.intToRadioValue(widget.task.status);
     _titleController = TextEditingController(text: widget.task.title);
     _detailController = TextEditingController(text: widget.task.detail);
+    _textFieldEnabled = false;
+    _textFieldReadOnly = true;
+    _buttonEnabled = false;
   }
 
   void _onRadioSelected(RadioValue? selectedButton) => setState(() {
-    _selectedButton = selectedButton!;
-  });
+        _selectedButton = selectedButton!;
+      });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("タスク詳細"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              setState(() {
+                _textFieldEnabled = true;
+                _textFieldReadOnly = false;
+                _buttonEnabled = true;
+              });
+            },
+          ),
+        ],
       ),
       body: Container(
           padding: const EdgeInsets.all(16),
@@ -45,7 +63,8 @@ class _DetailPage extends State<DetailPage> {
             child: Column(
               children: <Widget>[
                 TextField(
-
+                  enabled: _textFieldEnabled,
+                  readOnly: _textFieldReadOnly,
                   controller: _titleController,
                   decoration: const InputDecoration(
                     labelText: 'タイトルを入力',
@@ -59,6 +78,8 @@ class _DetailPage extends State<DetailPage> {
                   height: 30,
                 ),
                 TextField(
+                  enabled: _textFieldEnabled,
+                  readOnly: _textFieldReadOnly,
                   controller: _detailController,
                   maxLines: 5,
                   decoration: const InputDecoration(
@@ -71,25 +92,27 @@ class _DetailPage extends State<DetailPage> {
                 Align(
                   alignment: Alignment.topRight,
                   child: ElevatedButton(
-                    child: const Text('更新'),
-                    onPressed: () {
-                      // Firebase にアクセスしてデータを登録する。
-                      var task = <String, dynamic>{
-                        "title": _titleController.text,
-                        "status": _selectedButton.statusInt,
-                        "detail": _detailController.text,
-                        "insert_at": DateTime.now(),
-                      };
-                      DataManager.addTask("admin", task);
+                    onPressed: _buttonEnabled
+                        ? () {
+                            // Firebase にアクセスしてデータを登録する。
+                            var task = <String, dynamic>{
+                              "title": _titleController.text,
+                              "status": _selectedButton.statusInt,
+                              "detail": _detailController.text,
+                              "update_at": DateTime.now(),
+                            };
+                            DataManager.updateTask("admin", widget.task.docId, task);
 
-                      // Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                          const MyHomePage(title: 'Todo リスト'),
-                        ),
-                      );
-                    },
+                            // Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const MyHomePage(title: 'Todo リスト'),
+                              ),
+                            );
+                          }
+                        : null,
+                    child: const Text('更新'),
                   ),
                 ),
               ],
@@ -109,9 +132,12 @@ class _DetailPage extends State<DetailPage> {
         Row(
           children: [
             Radio<RadioValue>(
+              toggleable: false,
               value: RadioValue.yet,
               groupValue: _selectedButton,
-              onChanged: (selectedButton) => _onRadioSelected(selectedButton),
+              onChanged: _buttonEnabled
+                  ? (selectedButton) => _onRadioSelected(selectedButton)
+                  : null,
             ),
             Text(RadioValue.yet.statusValue),
           ],
@@ -119,9 +145,12 @@ class _DetailPage extends State<DetailPage> {
         Row(
           children: [
             Radio<RadioValue>(
+              toggleable: false,
               value: RadioValue.doing,
               groupValue: _selectedButton,
-              onChanged: (selectedButton) => _onRadioSelected(selectedButton),
+              onChanged: _buttonEnabled
+                  ? (selectedButton) => _onRadioSelected(selectedButton)
+                  : null,
             ),
             Text(RadioValue.doing.statusValue),
           ],
@@ -131,7 +160,9 @@ class _DetailPage extends State<DetailPage> {
             Radio<RadioValue>(
               value: RadioValue.done,
               groupValue: _selectedButton,
-              onChanged: (selectedButton) => _onRadioSelected(selectedButton),
+              onChanged: _buttonEnabled
+                  ? (selectedButton) => _onRadioSelected(selectedButton)
+                  : null,
             ),
             Text(RadioValue.done.statusValue),
           ],

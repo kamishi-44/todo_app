@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/add_task_page.dart';
 import 'package:todo_app/data/data_manager.dart';
 import 'package:todo_app/model/main_model.dart';
 import 'package:todo_app/util/view_util.dart';

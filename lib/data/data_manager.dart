@@ -19,6 +19,17 @@ class DataManager {
         .add(task);
   }
 
+  /// 指定タスク1件を更新します。
+  static void updateTask(String userId, String docId, Map<String, dynamic> task) {
+    var db = FirebaseFirestore.instance;
+    db
+        .collection(usersCollection)
+        .doc(userId)
+        .collection(taskCollection)
+        .doc(docId)
+        .update(task);
+  }
+
   /// 指定のユーザーが持つ指定のタスクを削除します。
   static void deleteTask(String userId, String docId) {
     var db = FirebaseFirestore.instance;

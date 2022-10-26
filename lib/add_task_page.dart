@@ -96,13 +96,7 @@ class _AddTaskPage extends State<AddTaskPage> {
                       };
                       DataManager.addTask("admin", task);
 
-                      // Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const MyHomePage(title: 'Todo リスト'),
-                        ),
-                      );
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),

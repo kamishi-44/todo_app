@@ -103,13 +103,7 @@ class _DetailPage extends State<DetailPage> {
                             };
                             DataManager.updateTask("admin", widget.task.docId, task);
 
-                            // Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const MyHomePage(title: 'Todo リスト'),
-                              ),
-                            );
+                            Navigator.of(context).pop();
                           }
                         : null,
                     child: const Text('更新'),

@@ -3,7 +3,6 @@ import 'package:todo_app/util/view_util.dart';
 
 import 'add_task_page.dart';
 import 'data/data_manager.dart';
-import 'main.dart';
 import 'model/task.dart';
 
 class DetailPage extends StatefulWidget {
@@ -91,22 +90,23 @@ class _DetailPage extends State<DetailPage> {
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: ElevatedButton(
-                    onPressed: _buttonEnabled
-                        ? () {
-                            // Firebase にアクセスしてデータを登録する。
-                            var task = <String, dynamic>{
-                              "title": _titleController.text,
-                              "status": _selectedButton.statusInt,
-                              "detail": _detailController.text,
-                              "update_at": DateTime.now(),
-                            };
-                            DataManager.updateTask("admin", widget.task.docId, task);
-
-                            Navigator.of(context).pop();
-                          }
-                        : null,
-                    child: const Text('更新'),
+                  child: Visibility(
+                    visible: _buttonEnabled,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Firebase にアクセスしてデータを登録する。
+                        var task = <String, dynamic>{
+                          "title": _titleController.text,
+                          "status": _selectedButton.statusInt,
+                          "detail": _detailController.text,
+                          "update_at": DateTime.now(),
+                        };
+                        DataManager.updateTask(
+                            "admin", widget.task.docId, task);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('更新'),
+                    ),
                   ),
                 ),
               ],

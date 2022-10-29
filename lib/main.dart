@@ -81,7 +81,8 @@ class MyHomePage extends StatelessWidget {
                             onPressed: (context) {
                               DataManager.deleteTask(
                                   'admin', tasks[index].docId);
-                              // tasks.removeAt(index);
+                              tasks.removeAt(index);
+                              model.notify();
                             },
                             flex: 2,
                             backgroundColor: const Color(0xFFFE4A49),

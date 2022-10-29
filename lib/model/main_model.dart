@@ -14,4 +14,9 @@ class MainModel extends ChangeNotifier {
     this.tasks = tasks;
     notifyListeners();
   }
+
+  /// notifyListeners を実行します。
+  void notify() {
+    notifyListeners();
+  }
 }

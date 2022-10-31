@@ -80,7 +80,7 @@ class MyHomePage extends StatelessWidget {
                           SlidableAction(
                             onPressed: (context) {
                               DataManager.deleteTask(
-                                  'admin', tasks[index].docId);
+                                  'admin', tasks[index].docId());
                               tasks.removeAt(index);
                               model.notify();
                             },
@@ -93,12 +93,12 @@ class MyHomePage extends StatelessWidget {
                         ],
                       ),
                       child: ListTile(
-                        title: Text(tasks[index].title),
+                        title: Text(tasks[index].title()),
                         onTap: () => {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  DetailPage(task: tasks[index]),
+                                  DetailPage(index: index, model: model,),
                             ),
                           ),
                         },

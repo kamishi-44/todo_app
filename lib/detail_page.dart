@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/model/main_model.dart';
 import 'package:todo_app/util/view_util.dart';
 
 import 'add_task_page.dart';
@@ -6,9 +7,13 @@ import 'data/data_manager.dart';
 import 'model/task.dart';
 
 class DetailPage extends StatefulWidget {
-  final Task task;
+  late Task task;
+  final int index;
+  final MainModel model;
 
-  const DetailPage({super.key, required this.task});
+  DetailPage({super.key, required this.index, required this.model}) {
+    task = model.tasks[index];
+  }
 
   @override
   State<DetailPage> createState() => _DetailPage();
@@ -26,9 +31,9 @@ class _DetailPage extends State<DetailPage> {
   @override
   initState() {
     super.initState();
-    _selectedButton = RadioValueExtension.intToRadioValue(widget.task.status);
-    _titleController = TextEditingController(text: widget.task.title);
-    _detailController = TextEditingController(text: widget.task.detail);
+    _selectedButton = RadioValueExtension.intToRadioValue(widget.task.status());
+    _titleController = TextEditingController(text: widget.task.title());
+    _detailController = TextEditingController(text: widget.task.detail());
     _textFieldEnabled = false;
     _textFieldReadOnly = true;
     _buttonEnabled = false;
@@ -101,8 +106,8 @@ class _DetailPage extends State<DetailPage> {
                           "detail": _detailController.text,
                           "update_at": DateTime.now(),
                         };
-                        DataManager.updateTask(
-                            "admin", widget.task.docId, task);
+                        widget.model.updateTask(
+                            "admin", task, widget.index);
                         Navigator.of(context).pop();
                       },
                       child: const Text('更新'),

@@ -7,20 +7,17 @@ import 'data/data_manager.dart';
 import 'model/task.dart';
 
 class DetailPage extends StatefulWidget {
-  late Task task;
   final int index;
   final MainModel model;
 
-  DetailPage({super.key, required this.index, required this.model}) {
-    task = model.tasks[index];
-  }
+  const DetailPage({super.key, required this.index, required this.model});
 
   @override
   State<DetailPage> createState() => _DetailPage();
 }
 
 class _DetailPage extends State<DetailPage> {
-  // RadioValue? _selectedButton = RadioValue.intToRadioValue(widget.task.status);
+  late final Task _task;
   late RadioValue _selectedButton;
   late final TextEditingController _titleController;
   late final TextEditingController _detailController;
@@ -31,9 +28,10 @@ class _DetailPage extends State<DetailPage> {
   @override
   initState() {
     super.initState();
-    _selectedButton = RadioValueExtension.intToRadioValue(widget.task.status());
-    _titleController = TextEditingController(text: widget.task.title());
-    _detailController = TextEditingController(text: widget.task.detail());
+    _task = widget.model.tasks[widget.index];
+    _selectedButton = RadioValueExtension.intToRadioValue(_task.status());
+    _titleController = TextEditingController(text: _task.title());
+    _detailController = TextEditingController(text: _task.detail());
     _textFieldEnabled = false;
     _textFieldReadOnly = true;
     _buttonEnabled = false;

@@ -13,11 +13,21 @@ class MainModel extends ChangeNotifier {
 
   Future<void> fetchTasks(String userId) async {
     var db = FirebaseFirestore.instance;
-    var docs  = await db.collection('users').doc(userId).collection('task').get();
+    var docs =
+        await db.collection('users').doc(userId).collection('task').get();
 
     final tasks = docs.docs.map((doc) => Task(doc)).toList();
     this.tasks = tasks;
     notifyListeners();
+  }
+
+  static void addTask(String userId, Map<String, dynamic> task) {
+    var db = FirebaseFirestore.instance;
+    db
+        .collection(_usersCollection)
+        .doc(userId)
+        .collection(_taskCollection)
+        .add(task);
   }
 
   void updateTask(String userId, Map<String, dynamic> task, int index) {
@@ -35,6 +45,7 @@ class MainModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
   /// notifyListeners を実行します。
   void notify() {
     notifyListeners();

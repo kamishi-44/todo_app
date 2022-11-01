@@ -20,7 +20,7 @@ class Task {
   late final String _docId;
 
   /// コンストラクタ
-  Task(DocumentSnapshot  doc) {
+  Task(DocumentSnapshot doc) {
     _title = doc["title"];
     _status = doc["status"];
     _detail = doc["detail"];

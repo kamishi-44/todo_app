@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/model/main_model.dart';
 import 'package:todo_app/util/view_util.dart';
 
 import 'add_task_page.dart';
 import 'data/data_manager.dart';
-import 'main.dart';
 import 'model/task.dart';
 
 class DetailPage extends StatefulWidget {
-  final Task task;
+  final int index;
+  final MainModel model;
 
-  const DetailPage({super.key, required this.task});
+  const DetailPage({super.key, required this.index, required this.model});
 
   @override
   State<DetailPage> createState() => _DetailPage();
 }
 
 class _DetailPage extends State<DetailPage> {
-  // RadioValue? _selectedButton = RadioValue.intToRadioValue(widget.task.status);
+  late final Task _task;
   late RadioValue _selectedButton;
   late final TextEditingController _titleController;
   late final TextEditingController _detailController;
@@ -27,9 +28,10 @@ class _DetailPage extends State<DetailPage> {
   @override
   initState() {
     super.initState();
-    _selectedButton = RadioValueExtension.intToRadioValue(widget.task.status);
-    _titleController = TextEditingController(text: widget.task.title);
-    _detailController = TextEditingController(text: widget.task.detail);
+    _task = widget.model.tasks[widget.index];
+    _selectedButton = RadioValueExtension.intToRadioValue(_task.status());
+    _titleController = TextEditingController(text: _task.title());
+    _detailController = TextEditingController(text: _task.detail());
     _textFieldEnabled = false;
     _textFieldReadOnly = true;
     _buttonEnabled = false;
@@ -91,22 +93,23 @@ class _DetailPage extends State<DetailPage> {
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: ElevatedButton(
-                    onPressed: _buttonEnabled
-                        ? () {
-                            // Firebase にアクセスしてデータを登録する。
-                            var task = <String, dynamic>{
-                              "title": _titleController.text,
-                              "status": _selectedButton.statusInt,
-                              "detail": _detailController.text,
-                              "update_at": DateTime.now(),
-                            };
-                            DataManager.updateTask("admin", widget.task.docId, task);
-
-                            Navigator.of(context).pop();
-                          }
-                        : null,
-                    child: const Text('更新'),
+                  child: Visibility(
+                    visible: _buttonEnabled,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Firebase にアクセスしてデータを登録する。
+                        var task = <String, dynamic>{
+                          "title": _titleController.text,
+                          "status": _selectedButton.statusInt,
+                          "detail": _detailController.text,
+                          "update_at": DateTime.now(),
+                        };
+                        widget.model.updateTask(
+                            "admin", task, widget.index);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('更新'),
+                    ),
                   ),
                 ),
               ],

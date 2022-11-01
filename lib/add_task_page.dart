@@ -2,39 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/data/data_manager.dart';
 
 import 'main.dart';
+import 'model/main_model.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
 
   @override
   State<AddTaskPage> createState() => _AddTaskPage();
-}
-
-enum RadioValue { yet, doing, done }
-
-extension RadioValueExtension on RadioValue {
-  static final values = {
-    RadioValue.yet: '未着手',
-    RadioValue.doing: '着手中',
-    RadioValue.done: '完了',
-  };
-
-  static final intValues = {
-    RadioValue.yet: 0,
-    RadioValue.doing: 1,
-    RadioValue.done: 2,
-  };
-
-  String get statusValue => values[this]!;
-
-  int get statusInt => intValues[this]!;
-
-  static RadioValue intToRadioValue(int statusInt) {
-    for (RadioValue radio in RadioValue.values) {
-      if(radio.statusInt == statusInt) return radio;
-    }
-    return RadioValue.yet;
-  }
 }
 
 class _AddTaskPage extends State<AddTaskPage> {
@@ -94,7 +68,7 @@ class _AddTaskPage extends State<AddTaskPage> {
                         "detail": _detailController.text,
                         "insert_at": DateTime.now(),
                       };
-                      DataManager.addTask("admin", task);
+                      MainModel.addTask("admin", task);
 
                       Navigator.of(context).pop();
                     },
@@ -141,5 +115,32 @@ class _AddTaskPage extends State<AddTaskPage> {
         ),
       ],
     );
+  }
+}
+
+enum RadioValue { yet, doing, done }
+
+extension RadioValueExtension on RadioValue {
+  static final values = {
+    RadioValue.yet: '未着手',
+    RadioValue.doing: '着手中',
+    RadioValue.done: '完了',
+  };
+
+  static final intValues = {
+    RadioValue.yet: 0,
+    RadioValue.doing: 1,
+    RadioValue.done: 2,
+  };
+
+  String get statusValue => values[this]!;
+
+  int get statusInt => intValues[this]!;
+
+  static RadioValue intToRadioValue(int statusInt) {
+    for (RadioValue radio in RadioValue.values) {
+      if(radio.statusInt == statusInt) return radio;
+    }
+    return RadioValue.yet;
   }
 }

@@ -45,67 +45,68 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
-  /// タスクの未着手を表すステータス
-  static const int yet = 0;
-
-  /// タスクの着手中を表すステータス
-  static const int doing = 1;
-
-  /// タスクの完了を表すステータス
-  static const int done = 2;
-
   final String title;
 
   @override
   Widget build(BuildContext context) {
+    MainModel? model;
     return ChangeNotifierProvider<MainModel>(
       create: (_) => MainModel()..fetchTasks('admin'),
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
         ),
-        body: Consumer<MainModel>(
-          builder: (context, model, child) {
-            final tasks = model.tasks;
-            return SlidableAutoCloseBehavior(
-              closeWhenTapped: true,
-              child: ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    return Slidable(
-                      key: ValueKey(index),
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              DataManager.deleteTask(
-                                  'admin', tasks[index].docId);
-                              // tasks.removeAt(index);
-                            },
-                            flex: 2,
-                            backgroundColor: const Color(0xFFFE4A49),
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            label: '削除',
-                          ),
-                        ],
-                      ),
-                      child: ListTile(
-                        title: Text(tasks[index].title),
-                        onTap: () => {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  DetailPage(task: tasks[index]),
-                            ),
-                          ),
-                        },
-                      ),
-                    );
-                  }),
-            );
+        body: RefreshIndicator(
+          onRefresh: () async {
+            model?.fetchTasks('admin');
           },
+          child: Consumer<MainModel>(
+            builder: (context, model, child) {
+              model = model;
+              final tasks = model.tasks;
+              return SlidableAutoCloseBehavior(
+                closeWhenTapped: true,
+                child: ListView.builder(
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      return Slidable(
+                        key: ValueKey(index),
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (context) {
+                                DataManager.deleteTask(
+                                    'admin', tasks[index].docId());
+                                tasks.removeAt(index);
+                                model.notify();
+                              },
+                              flex: 2,
+                              backgroundColor: const Color(0xFFFE4A49),
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete,
+                              label: '削除',
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(tasks[index].title()),
+                          onTap: () => {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => DetailPage(
+                                  index: index,
+                                  model: model,
+                                ),
+                              ),
+                            ),
+                          },
+                        ),
+                      );
+                    }),
+              );
+            },
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => ViewUtil.transitionAddTaskPage(context),
